@@ -1,0 +1,6 @@
+:host { display: block; background: var(--paper); color: var(--ink); }
+main { overflow: hidden; }
+.site-footer { max-width: 1180px; margin: 0 auto; padding: 44px 28px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 12px; border-top: 1px solid #e7e3df; }
+.brand-mark { color: var(--ink); font: 700 22px/1 var(--sans); letter-spacing: -1px; }
+.brand-mark span { color: var(--coral); }
+@media (max-width: 620px) { .site-footer { flex-direction: column; gap: 12px; text-align: center; } }

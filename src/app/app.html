@@ -1,0 +1,7 @@
+<app-header [cantidadCarrito]="carrito()" />
+<main>
+  <app-hero />
+  <app-market-insights />
+  <app-producto-list (productoSeleccionado)="agregarAlCarrito()" />
+</main>
+<footer class="site-footer"><span class="brand-mark">nido<span>.</span></span><span>Inversión con criterio, patrimonio con propósito.</span><span>© 2026 Nido Capital</span></footer>
