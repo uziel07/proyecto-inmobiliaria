@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Numeric, String, Text, func
+from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Index, Integer, Numeric, String, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.session import Base
@@ -30,11 +30,12 @@ class Categoria(Timestamped):
     __tablename__ = 'categorias'
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre: Mapped[str] = mapped_column(String(80), unique=True)
+    slug: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     productos: Mapped[list['Producto']] = relationship(back_populates='categoria')
 
 class Producto(Timestamped):
     __tablename__ = 'productos'
-    __table_args__ = (CheckConstraint('precio >= 0', name='ck_productos_precio_no_negativo'), CheckConstraint('rentabilidad_estimada >= 0', name='ck_productos_rentabilidad_no_negativa'), Index('ix_productos_activo', 'activo'))
+    __table_args__ = (CheckConstraint('precio >= 0', name='ck_productos_precio_no_negativo'), CheckConstraint('rentabilidad_estimada >= 0', name='ck_productos_rentabilidad_no_negativa'), CheckConstraint('stock >= 0', name='ck_productos_stock_no_negativo'), Index('ix_productos_activo', 'activo'))
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     categoria_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('categorias.id'), index=True)
     nombre: Mapped[str] = mapped_column(String(150))
@@ -43,8 +44,9 @@ class Producto(Timestamped):
     sku: Mapped[str] = mapped_column(String(30), unique=True)
     precio: Mapped[Decimal] = mapped_column(Numeric(14, 2))
     rentabilidad_estimada: Mapped[Decimal] = mapped_column(Numeric(5, 2))
+    stock: Mapped[int] = mapped_column(Integer, default=1, server_default='1')
     imagen_url: Mapped[str] = mapped_column(String(500))
-    estado: Mapped[str] = mapped_column(String(30), default='Disponible')
+    estado: Mapped[str] = mapped_column(String(30), default='disponible', server_default='disponible')
     activo: Mapped[bool] = mapped_column(Boolean, default=True)
     categoria: Mapped[Categoria] = relationship(back_populates='productos')
 
@@ -54,7 +56,7 @@ class Carrito(Timestamped):
     usuario_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('usuarios.id'))
 
 class DetalleCarrito(Timestamped):
-    __tablename__ = 'detalles_carrito'
+    __tablename__ = 'detalle_carrito'
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     carrito_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('carritos.id'))
     producto_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('productos.id'))

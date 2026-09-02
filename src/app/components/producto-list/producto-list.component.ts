@@ -1,13 +1,57 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, output, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { Subscription, timer } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { Producto, Categoria } from '../../models/producto.model';
 import { ProductoService } from '../../services/producto.service';
 import { PropertyCardComponent } from '../property-card/property-card.component';
-@Component({ selector:'app-producto-list', standalone:true, imports:[PropertyCardComponent], templateUrl:'./producto-list.component.html', styleUrl:'./producto-list.component.scss', changeDetection:ChangeDetectionStrategy.OnPush })
-export class ProductoListComponent implements OnInit {
-  private readonly service = inject(ProductoService); readonly productoSeleccionado = output<void>();
-  readonly productos = signal<Producto[]>([]); readonly cargando = signal(true); readonly error = signal(false); readonly categoriaSeleccionada = signal('Todas');
-  readonly categorias = computed<Categoria[]>(() => [{id:'all',nombre:'Todas'}, ...this.productos().map((p) => p.categoria).filter((c, i, all) => all.findIndex((item) => item.id === c.id) === i)]);
-  readonly productosFiltrados = computed(() => this.categoriaSeleccionada() === 'Todas' ? this.productos() : this.productos().filter((p) => p.categoria.nombre === this.categoriaSeleccionada()));
-  ngOnInit(): void { this.service.obtenerProductos().subscribe({ next:(data) => { this.productos.set(data); this.cargando.set(false); }, error:() => { this.error.set(true); this.cargando.set(false); } }); }
-  seleccionar(nombre:string): void { this.productoSeleccionado.emit(); }
+import { PropertyFormComponent } from '../property-form/property-form.component';
+
+@Component({ selector: 'app-producto-list', standalone: true, imports: [DatePipe, PropertyCardComponent, PropertyFormComponent], templateUrl: './producto-list.component.html', styleUrl: './producto-list.component.scss', changeDetection: ChangeDetectionStrategy.OnPush })
+export class ProductoListComponent implements OnInit, OnDestroy {
+  private readonly service = inject(ProductoService);
+  private readonly polling = new Subscription();
+  private ids = new Set<string>();
+  readonly productoSeleccionado = output<Producto>();
+  readonly productos = signal<Producto[]>([]);
+  readonly categorias = signal<Categoria[]>([]);
+  readonly cargando = signal(true);
+  readonly error = signal('');
+  readonly categoriaSeleccionada = signal('Todas');
+  readonly estadoSeleccionado = signal('Todos');
+  readonly ultimaActualizacion = signal<Date | null>(null);
+  readonly aviso = signal('');
+  readonly productosFiltrados = computed(() => this.productos().filter((producto) => (this.categoriaSeleccionada() === 'Todas' || producto.categoria.slug === this.categoriaSeleccionada()) && (this.estadoSeleccionado() === 'Todos' || producto.estado === this.estadoSeleccionado())));
+
+  ngOnInit(): void {
+    this.service.obtenerCategorias().subscribe({ next: (data) => this.categorias.set(data) });
+    if (environment.autoRefreshProperties) {
+      this.polling.add(timer(0, environment.refreshIntervalMs).pipe(exhaustMap(() => this.service.obtenerProductos())).subscribe({ next: (data) => this.actualizar(data), error: () => this.error.set('No se pudo conectar con la API.') }));
+    } else {
+      this.refrescar();
+    }
+  }
+
+  ngOnDestroy(): void { this.polling.unsubscribe(); }
+
+  refrescar(): void {
+    this.cargando.set(this.productos().length === 0);
+    this.service.obtenerProductos().subscribe({ next: (data) => this.actualizar(data), error: () => { this.error.set('No se pudo conectar con la API.'); this.cargando.set(false); } });
+  }
+
+  propiedadCreada(): void { this.refrescar(); }
+  cambiarEstado(event: Event): void { this.estadoSeleccionado.set((event.target as HTMLSelectElement).value); }
+
+  private actualizar(data: Producto[]): void {
+    const nuevos = this.ids.size > 0 && data.some((producto) => !this.ids.has(producto.id));
+    this.ids = new Set(data.map((producto) => producto.id));
+    this.productos.set(data);
+    this.cargando.set(false);
+    this.error.set('');
+    this.ultimaActualizacion.set(new Date());
+    if (nuevos) { this.aviso.set('Nuevas propiedades disponibles'); window.setTimeout(() => this.aviso.set(''), 3500); }
+  }
+
+  seleccionar(producto: Producto): void { this.productoSeleccionado.emit(producto); }
 }

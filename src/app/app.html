@@ -1,7 +1,21 @@
-<app-header [cantidadCarrito]="carrito()" />
+<app-header [cantidadCarrito]="seleccion().length" (abrirCarrito)="alternarCarrito()" />
+@if (carritoAbierto()) {
+  <aside class="selection-panel" aria-label="Propiedades seleccionadas">
+    <div class="panel-head"><div><span class="section-label">MI SELECCIÓN</span><h2>Propiedades guardadas</h2></div><button class="close-panel" (click)="alternarCarrito()" aria-label="Cerrar selección">×</button></div>
+    @if (seleccion().length === 0) {
+      <p class="selection-empty">Todavía no has agregado propiedades. Usa el botón + en una tarjeta.</p>
+    } @else {
+      <div class="selection-list">
+        @for (producto of seleccion(); track producto.id) {
+          <div class="selection-item"><img [src]="producto.imagen_url || '/images/properties/property-placeholder.svg'" [alt]="producto.nombre"><div><strong>{{ producto.nombre }}</strong><small>{{ producto.precio | currency:'USD':'symbol':'1.0-0' }}</small></div><button (click)="quitarDeSeleccion(producto.id)" aria-label="Quitar propiedad">×</button></div>
+        }
+      </div>
+    }
+  </aside>
+}
 <main>
   <app-hero />
   <app-market-insights />
-  <app-producto-list (productoSeleccionado)="agregarAlCarrito()" />
+  <app-producto-list (productoSeleccionado)="agregarAlCarrito($event)" />
 </main>
 <footer class="site-footer"><span class="brand-mark">nido<span>.</span></span><span>Inversión con criterio, patrimonio con propósito.</span><span>© 2026 Nido Capital</span></footer>

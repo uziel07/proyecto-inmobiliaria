@@ -8,9 +8,9 @@ Aplicación básica de clase para explorar oportunidades de inversión inmobilia
 cp .env.example .env
 docker compose up --build -d
 docker compose exec backend alembic upgrade head
+docker compose exec backend python -m app.scripts.seed
 curl http://localhost:8000/health
 curl http://localhost:8000/productos
-cd frontend
 npm install
 npm start
 ```
@@ -20,6 +20,17 @@ En este repositorio el frontend está en la raíz, por lo que el último bloque 
 - Frontend: http://localhost:4200
 - API: http://localhost:8000
 - Swagger: http://localhost:8000/docs
+
+La API consulta PostgreSQL en cada solicitud. El catálogo se actualiza automáticamente cada 5 segundos en desarrollo y también puede actualizarse con el botón “Actualizar propiedades”.
+
+Endpoints principales:
+
+- `GET /categorias`
+- `GET /productos?categoria=casas-de-lujo&estado=disponible`
+- `GET /productos/{id}`
+- `POST /productos`
+
+El script `backend/app/scripts/seed.py` es idempotente y carga diez propiedades. Para probar una inserción desde DBeaver, ejecutar `database/test_insert.sql` y esperar el sondeo o pulsar el botón de actualización.
 
 ## DBeaver
 
