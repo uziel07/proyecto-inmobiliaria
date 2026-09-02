@@ -1,0 +1,38 @@
+@if (producto(); as p) {
+  <div class="detail-overlay" (click)="cerrar.emit()">
+    <div class="detail-modal" (click)="$event.stopPropagation()">
+      <button class="close" (click)="cerrar.emit()" aria-label="Cerrar">×</button>
+      <div class="detail-img">
+        <img [src]="p.imagen_url || '/images/properties/property-placeholder.svg'" [alt]="p.nombre">
+        <span class="badge" [class]="'badge-' + p.estado">{{ mostrarEstado(p.estado) }}</span>
+      </div>
+      <div class="detail-body">
+        <p class="detail-category">{{ p.categoria.nombre }} · {{ p.ubicacion }}</p>
+        <h2>{{ p.nombre }}</h2>
+        <p class="detail-desc">{{ p.descripcion }}</p>
+
+        <div class="detail-metrics">
+          <div><span>Precio de oportunidad</span><strong>{{ p.precio | currency:'USD':'symbol':'1.0-0' }}</strong></div>
+          <div class="yield"><span>Retorno anual</span><strong>+{{ p.rentabilidad_estimada }}%</strong></div>
+          <div><span>Disponibilidad</span><strong>{{ p.stock }} unid.</strong></div>
+          <div><span>Código / SKU</span><strong>{{ p.sku }}</strong></div>
+        </div>
+
+        <div class="detail-section">
+          <h4>Razones para invertir</h4>
+          <ul class="feature-list">
+            <li><span>✓</span> Ubicación estratégica en <strong>{{ p.ubicacion }}</strong></li>
+            <li><span>✓</span> Rentabilidad estimada de <strong>+{{ p.rentabilidad_estimada }}%</strong> anual</li>
+            <li><span>✓</span> Categoría <strong>{{ p.categoria.nombre }}</strong></li>
+            <li><span>✓</span> Estado actual: <strong>{{ mostrarEstado(p.estado) }}</strong></li>
+          </ul>
+        </div>
+
+        <div class="detail-cta">
+          <button class="primary" (click)="cerrar.emit()">Solicitar información <span>↗</span></button>
+          <button class="secondary" (click)="cerrar.emit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
