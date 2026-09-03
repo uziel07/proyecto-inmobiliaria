@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ClienteCreate } from '../../models/cliente.model';
 import { ClienteService } from '../../services/cliente.service';
 
-@Component({ selector: 'app-cliente-form', standalone: true, imports: [ReactiveFormsModule], templateUrl: './cliente-form.component.html', styleUrl: './cliente-form.component.scss', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ selector: 'app-cliente-form', standalone: true, imports: [ReactiveFormsModule], templateUrl: './cliente-form.component.html', changeDetection: ChangeDetectionStrategy.OnPush })
 export class ClienteFormComponent {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly service = inject(ClienteService);

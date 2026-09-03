@@ -1,36 +1,36 @@
 @if (producto(); as p) {
-  <div class="detail-overlay" (click)="cerrar.emit()">
-    <div class="detail-modal" (click)="$event.stopPropagation()">
-      <button class="close" (click)="cerrar.emit()" aria-label="Cerrar">×</button>
-      <div class="detail-img">
-        <img [src]="p.imagen_url || '/images/properties/property-placeholder.svg'" [alt]="p.nombre">
-        <span class="badge" [class]="'badge-' + p.estado">{{ mostrarEstado(p.estado) }}</span>
+  <div class="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/40 p-5 backdrop-blur-xs" (click)="cerrar.emit()">
+    <div class="relative max-h-[90vh] w-[min(600px,100%)] overflow-y-auto rounded-2xl bg-white shadow-2xl" (click)="$event.stopPropagation()">
+      <button class="absolute right-4 top-4 z-10 h-9 w-9 rounded-full border-0 bg-white/90 text-xl text-slate-900" (click)="cerrar.emit()" aria-label="Cerrar">×</button>
+      <div class="relative h-72">
+        <img class="h-full w-full object-cover" [src]="p.imagen_url || '/images/properties/property-placeholder.svg'" [alt]="p.nombre">
+        <span class="absolute left-4 top-4 rounded-full bg-emerald-100 px-3 py-2 text-xs capitalize text-emerald-800">{{ mostrarEstado(p.estado) }}</span>
       </div>
-      <div class="detail-body">
-        <p class="detail-category">{{ p.categoria.nombre }} · {{ p.ubicacion }}</p>
-        <h2>{{ p.nombre }}</h2>
-        <p class="detail-desc">{{ p.descripcion }}</p>
+      <div class="p-7">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-rose-400">{{ p.categoria.nombre }} · {{ p.ubicacion }}</p>
+        <h2 class="my-2 font-serif text-3xl font-medium text-slate-900">{{ p.nombre }}</h2>
+        <p class="mb-6 text-sm leading-relaxed text-slate-500">{{ p.descripcion }}</p>
 
-        <div class="detail-metrics">
-          <div><span>Precio de oportunidad</span><strong>{{ p.precio | currency:'USD':'symbol':'1.0-0' }}</strong></div>
-          <div class="yield"><span>Retorno anual</span><strong>+{{ p.rentabilidad_estimada }}%</strong></div>
-          <div><span>Disponibilidad</span><strong>{{ p.stock }} unid.</strong></div>
-          <div><span>Código / SKU</span><strong>{{ p.sku }}</strong></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="rounded-xl border border-slate-200 p-4"><span class="mb-2 block text-[10px] uppercase tracking-wider text-slate-500">Precio de oportunidad</span><strong class="text-lg">{{ p.precio | currency:'USD':'symbol':'1.0-0' }}</strong></div>
+          <div class="rounded-xl border border-slate-200 p-4"><span class="mb-2 block text-[10px] uppercase tracking-wider text-slate-500">Retorno anual</span><strong class="text-lg text-emerald-700">+{{ p.rentabilidad_estimada }}%</strong></div>
+          <div class="rounded-xl border border-slate-200 p-4"><span class="mb-2 block text-[10px] uppercase tracking-wider text-slate-500">Disponibilidad</span><strong class="text-lg">{{ p.stock }} unid.</strong></div>
+          <div class="rounded-xl border border-slate-200 p-4"><span class="mb-2 block text-[10px] uppercase tracking-wider text-slate-500">Código / SKU</span><strong class="text-lg">{{ p.sku }}</strong></div>
         </div>
 
-        <div class="detail-section">
-          <h4>Razones para invertir</h4>
-          <ul class="feature-list">
-            <li><span>✓</span> Ubicación estratégica en <strong>{{ p.ubicacion }}</strong></li>
-            <li><span>✓</span> Rentabilidad estimada de <strong>+{{ p.rentabilidad_estimada }}%</strong> anual</li>
-            <li><span>✓</span> Categoría <strong>{{ p.categoria.nombre }}</strong></li>
-            <li><span>✓</span> Estado actual: <strong>{{ mostrarEstado(p.estado) }}</strong></li>
+        <div class="mt-6">
+          <h4 class="mb-3 font-serif text-lg">Razones para invertir</h4>
+          <ul class="grid list-none gap-2 p-0 text-sm leading-relaxed text-slate-500">
+            <li>✓ Ubicación estratégica en <strong class="text-slate-900">{{ p.ubicacion }}</strong></li>
+            <li>✓ Rentabilidad estimada de <strong class="text-slate-900">+{{ p.rentabilidad_estimada }}%</strong> anual</li>
+            <li>✓ Categoría <strong class="text-slate-900">{{ p.categoria.nombre }}</strong></li>
+            <li>✓ Estado actual: <strong class="capitalize text-slate-900">{{ mostrarEstado(p.estado) }}</strong></li>
           </ul>
         </div>
 
-        <div class="detail-cta">
-          <button class="primary" (click)="cerrar.emit()">Solicitar información <span>↗</span></button>
-          <button class="secondary" (click)="cerrar.emit()">Cerrar</button>
+        <div class="mt-6 flex gap-3">
+          <button class="rounded-full bg-slate-900 px-5 py-3 text-xs text-white" (click)="cerrar.emit()">Solicitar información <span>↗</span></button>
+          <button class="rounded-full bg-slate-100 px-5 py-3 text-xs text-slate-900" (click)="cerrar.emit()">Cerrar</button>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-@Component({ selector: 'app-nosotros', standalone: true, templateUrl: './nosotros.component.html', styleUrl: './nosotros.component.scss', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ selector: 'app-nosotros', standalone: true, templateUrl: './nosotros.component.html', changeDetection: ChangeDetectionStrategy.OnPush })
 export class NosotrosComponent {}

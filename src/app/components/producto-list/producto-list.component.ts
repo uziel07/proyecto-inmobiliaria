@@ -9,7 +9,7 @@ import { PropertyCardComponent } from '../property-card/property-card.component'
 import { PropertyFormComponent } from '../property-form/property-form.component';
 import { PropertyDetailComponent } from '../property-detail/property-detail.component';
 
-@Component({ selector: 'app-producto-list', standalone: true, imports: [DatePipe, PropertyCardComponent, PropertyFormComponent, PropertyDetailComponent], templateUrl: './producto-list.component.html', styleUrl: './producto-list.component.scss', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ selector: 'app-producto-list', standalone: true, imports: [DatePipe, PropertyCardComponent, PropertyFormComponent, PropertyDetailComponent], templateUrl: './producto-list.component.html', changeDetection: ChangeDetectionStrategy.OnPush })
 export class ProductoListComponent implements OnInit, OnDestroy {
   private readonly service = inject(ProductoService);
   private readonly polling = new Subscription();

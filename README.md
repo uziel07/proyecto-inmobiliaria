@@ -1,6 +1,6 @@
 # Nido Capital
 
-Aplicación básica de clase para explorar oportunidades de inversión inmobiliaria. El frontend usa Angular 21 y el backend FastAPI entrega propiedades almacenadas en PostgreSQL. Las tablas técnicas incluyen usuarios, clientes, productos, categorías, carritos, detalles de carrito, pedidos y detalles de pedido.
+Aplicación básica de clase para explorar oportunidades de inversión inmobiliaria. El frontend usa Angular 21 y el backend FastAPI entrega propiedades almacenadas en PostgreSQL. El esquema mínimo usa usuarios, clientes, productos y categorías.
 
 ## Ejecución
 
@@ -16,6 +16,12 @@ npm start
 ```
 
 En este repositorio el frontend está en la raíz, por lo que el último bloque puede ejecutarse como `npm install` y `npm start` desde la carpeta del proyecto.
+
+Para ejecutar el backend directamente sin Docker, entra en `backend` y usa:
+
+```bash
+python -m uvicorn app.main:app --reload
+```
 
 - Frontend: http://localhost:4200
 - API: http://localhost:8000

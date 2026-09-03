@@ -49,30 +49,3 @@ class Producto(Timestamped):
     estado: Mapped[str] = mapped_column(String(30), default='disponible', server_default='disponible')
     activo: Mapped[bool] = mapped_column(Boolean, default=True)
     categoria: Mapped[Categoria] = relationship(back_populates='productos')
-
-class Carrito(Timestamped):
-    __tablename__ = 'carritos'
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    usuario_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('usuarios.id'))
-
-class DetalleCarrito(Timestamped):
-    __tablename__ = 'detalle_carrito'
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    carrito_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('carritos.id'))
-    producto_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('productos.id'))
-    cantidad: Mapped[int] = mapped_column(default=1)
-
-class Pedido(Timestamped):
-    __tablename__ = 'pedidos'
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    cliente_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('clientes.id'))
-    estado: Mapped[str] = mapped_column(String(30), default='Pendiente')
-    total: Mapped[Decimal] = mapped_column(Numeric(14, 2), default=0)
-
-class DetallePedido(Timestamped):
-    __tablename__ = 'detalles_pedido'
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    pedido_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('pedidos.id'))
-    producto_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('productos.id'))
-    precio_unitario: Mapped[Decimal] = mapped_column(Numeric(14, 2))
-    cantidad: Mapped[int] = mapped_column(default=1)

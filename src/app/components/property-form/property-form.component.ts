@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Categoria, EstadoProducto, ProductoCreate } from '../../models/producto.model';
 import { ProductoService } from '../../services/producto.service';
 
-@Component({ selector: 'app-property-form', standalone: true, imports: [ReactiveFormsModule], templateUrl: './property-form.component.html', styleUrl: './property-form.component.scss', changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ selector: 'app-property-form', standalone: true, imports: [ReactiveFormsModule], templateUrl: './property-form.component.html', changeDetection: ChangeDetectionStrategy.OnPush })
 export class PropertyFormComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly service = inject(ProductoService);

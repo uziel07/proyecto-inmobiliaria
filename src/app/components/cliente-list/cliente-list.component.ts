@@ -5,7 +5,7 @@ import { Cliente } from '../../models/cliente.model';
 import { ClienteService } from '../../services/cliente.service';
 import { ClienteFormComponent } from '../cliente-form/cliente-form.component';
 
-@Component({ selector: 'app-cliente-list', standalone: true, imports: [FormsModule, ClienteFormComponent], templateUrl: './cliente-list.component.html', styleUrl: './cliente-list.component.scss' })
+@Component({ selector: 'app-cliente-list', standalone: true, imports: [FormsModule, ClienteFormComponent], templateUrl: './cliente-list.component.html' })
 export class ClienteListComponent implements OnInit {
   private readonly service = inject(ClienteService);
   readonly clientes = signal<Cliente[]>([]);
